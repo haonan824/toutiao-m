@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <van-nav-bar title="登录/注册">
-      <van-icon name="cross" slot="left"/>
+      <van-icon name="cross"  @click="$router.push('/')" slot="left"/>
     </van-nav-bar>
     <ValidationObserver ref="form">
       <ValidationProvider name="手机号" rules="required|mobile" immediate>
@@ -68,6 +68,7 @@ export default {
         console.log(res)
         this.$store.commit('settoken', res.data.data)
         this.$toast.success('登录成功')
+        this.$router.push('/')
       } catch (err) {
         // console.log('登录失败', err)
         this.$toast.fail('登录失败')
