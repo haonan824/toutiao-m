@@ -112,7 +112,7 @@ export default {
     padding: 12px;
     background-color: #fff;
     margin-bottom: 10px;
-    > .row1 {
+     .row1 {
       display: flex;
       justify-content: space-between;
       align-items: center;

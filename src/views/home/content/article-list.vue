@@ -1,11 +1,13 @@
 <template>
   <div>
-    <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-      <van-cell v-for="(item,index) in list" :key="index">
-          <!-- {{item.title}} -->
-        <lists :lists='item'></lists>
-      </van-cell>
-    </van-list>
+    <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+      <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+        <van-cell v-for="(item,index) in list" :key="index">
+            <!-- {{item.title}} -->
+          <lists :lists='item'></lists>
+        </van-cell>
+      </van-list>
+    </van-pull-refresh>
   </div>
 </template>
 
@@ -23,13 +25,15 @@ export default {
       type: Object, // 必须是对象
       required: true// 必填
     }
+
   },
   data () {
     return {
       list: [],
       loading: false,
       finished: false,
-      timestamp: null
+      timestamp: null,
+      isLoading: false
     }
   },
   computed: {},
@@ -37,6 +41,17 @@ export default {
   created () {},
   mounted () {},
   methods: {
+    async onRefresh () {
+      const { data } = await getArticles({
+        channel_id: this.channel.id, // 频道id
+        timestamp: Date.now(), // 时间戳
+        with_top: 1 // 页数
+      })
+      const { results } = data.data
+      this.list.unshift(...results)
+      this.isLoading = false
+      this.$toast(`更新了${results.length}条数据`)
+    },
     async onLoad () {
     //   // 异步更新数据
     //   setTimeout(() => {

@@ -19,3 +19,9 @@ export const getArticles = (params) => {
     params
   })
 }
+export const getAllChannel = () => {
+  return request({ // 获取全部频道
+    url: '/app/v1_0/channels',
+    method: 'get'
+  })
+}

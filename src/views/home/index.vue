@@ -2,26 +2,42 @@
   <div class="home">
     <van-nav-bar title="首页" />
     <van-tabs v-model="active">
-      <van-tab :title='item.name' v-for="item in userChannels" :key='item.id' :name='item.id'>
-        <ArticleList :channel='item'></ArticleList>
+      <van-icon slot="nav-right" name="wap-nav" class="wap-nav" @click="isshow = true" />
+      <van-tab :title="item.name" v-for="item in userChannels" :key="item.id">
+        <ArticleList :channel="item"></ArticleList>
       </van-tab>
     </van-tabs>
+    <van-popup
+      v-model="isshow"
+      closeable
+      close-icon-position="top-left"
+      position="bottom"
+      :style="{ height: '100%' }"
+    >
+    <ChannelEdit :user-channels="userChannels"
+    :active="active"
+    @switch="onChannelSwitch"/>
+    </van-popup>
   </div>
 </template>
 
 <script>
 import { userchannel } from '../../api/article'
 import ArticleList from './content/article-list'
+import ChannelEdit from './content/channel-edit'
+import { getItem } from '@/utils/storage'
 export default {
   name: 'home',
   components: {
-    ArticleList
+    ArticleList,
+    ChannelEdit
   },
   props: {},
   data () {
     return {
       active: 0,
-      userChannels: [] // 用户频道列表
+      userChannels: [], // 用户频道列表
+      isshow: false
     }
   },
   computed: {},
@@ -31,14 +47,54 @@ export default {
   },
   mounted () {},
   methods: {
+    onChannelSwitch (index) {
+      this.active = index
+      this.isshow = false
+    },
     async getchannel () {
-      const { data } = await userchannel()
-      // console.log(data)
-      this.userChannels = data.data.channels
+      let channels = []
+      const localUserChannles = getItem('storage')
+      if (localUserChannles) {
+        channels = localUserChannles
+      } else {
+        const { data } = await userchannel()
+        // console.log(data)
+        this.userChannels = data.data.channels
+      }
+      this.userChannels = channels
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
+.van-nav-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+/deep/ .van-tabs__wrap {
+  position: fixed;
+  top: 46px;
+  left: 0;
+  right: 0;
+  z-index: 2;
+}
+.home {
+  .van-tabs {
+    padding-top: 90px;
+    padding-bottom: 50px;
+  }
+}
+.wap-nav {
+  position: fixed;
+  right: 0;
+  line-height: 44px;
+  background: #fff;
+  opacity: 0.8;
+}
+.channel-edit{
+  padding-top: 45px;
+}
 </style>

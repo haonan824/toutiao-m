@@ -51,7 +51,7 @@ export default {
         const errors = this.$refs.form.errors
         for (let key in errors) {
           const tiem = errors[key]
-          console.log(tiem)
+          // console.log(tiem)
           if (tiem[0]) {
             this.$toast(tiem[0])
             return
@@ -65,7 +65,7 @@ export default {
       })
       try {
         const res = await login(this.user)// 登录
-        console.log(res)
+        // console.log(res)
         this.$store.commit('settoken', res.data.data)
         this.$toast.success('登录成功')
         this.$router.push('/')
@@ -80,7 +80,7 @@ export default {
         const verification = await validate(mobile, 'required|mobile', {
           name: '手机号'
         })// 验证手机号
-        console.log(verification.valid)
+        // console.log(verification.valid)
         if (!verification.valid) {
           this.$toast(verification.errors[0])
           return
