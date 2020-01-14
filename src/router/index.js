@@ -12,7 +12,9 @@ const routes = [
     ]
   },
   { path: '/login', component: () => import('../views/login') },
-  { path: '/user/:userId', component: () => import('../views/user') }
+  { path: '/user/:userId', component: () => import('../views/user') },
+  { path: '/search', component: () => import('../views/search') },
+  { path: '/article/:articleId', component: () => import('../views/article'), props: true }
 ]
 const router = new VueRouter({
   routes

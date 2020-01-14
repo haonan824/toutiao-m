@@ -25,3 +25,39 @@ export const getAllChannel = () => {
     method: 'get'
   })
 }
+export const getArticleById = articleId => { // 文章详细
+  return request({
+    method: 'GET',
+    url: `/app/v1_0/articles/${articleId}`
+  })
+}
+
+export const addCollect = target => { // 收藏文章
+  return request({
+    method: 'POST',
+    url: '/app/v1_0/article/collections',
+    data: {
+      target
+    }
+  })
+}
+
+export const deleteCollect = target => { // 取消收藏文章
+  return request({
+    method: 'DELETE',
+    url: `/app/v1_0/article/collections/${target}`
+  })
+}
+export const deletelike = target => { // 取消点赞文章
+  return request({
+    method: 'DELETE',
+    url: `/app/v1_0/article/likings/${target}`
+  })
+}
+export const addlike = target => { // 取消点赞文章
+  return request({
+    method: 'POST',
+    url: '/app/v1_0/article/likings',
+    data: { target }
+  })
+}

@@ -1,6 +1,8 @@
 <template>
   <div class="home">
-    <van-nav-bar title="首页" />
+    <van-nav-bar fixed>
+      <van-button @click="$router.push('/search')" round icon='search' slot="title" type="info">搜索</van-button>
+    </van-nav-bar>
     <van-tabs v-model="active">
       <van-icon slot="nav-right" name="wap-nav" class="wap-nav" @click="isshow = true" />
       <van-tab :title="item.name" v-for="item in userChannels" :key="item.id">
@@ -68,11 +70,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.van-nav-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+.van-button{
+  width: 220px;
+  background:#5babfb;
 }
 /deep/ .van-tabs__wrap {
   position: fixed;

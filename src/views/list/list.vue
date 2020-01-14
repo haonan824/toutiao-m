@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div @click="$router.push(`/article/${lists.art_id}`)">
     <van-row>
       <van-col span="24" offset="1">
         <p>{{lists.title}}</p>
