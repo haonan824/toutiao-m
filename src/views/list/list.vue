@@ -25,7 +25,7 @@
           <span>评论{{lists.comm_count}}</span>
       </van-col>
        <van-col span="10" offset="1">
-          <span>{{lists.pubdate}}</span>
+          <span>{{lists.pubdate | relativeTime}}</span>
       </van-col>
     </van-row>
   </div>

@@ -25,3 +25,19 @@ export const getuserId = (userId) => {
     method: 'get'
   })
 }
+export const addFollow = userId => { // 添加关注
+  return request({
+    method: 'POST',
+    url: '/app/v1_0/user/followings',
+    data: {
+      target: userId
+    }
+  })
+}
+
+export const deleteFollow = userId => { // 取消关注
+  return request({
+    method: 'DELETE',
+    url: `/app/v1_0/user/followings/${userId}`
+  })
+}
