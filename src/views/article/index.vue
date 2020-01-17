@@ -31,6 +31,8 @@
         >{{ article.is_followed ? '已关注' : '+ 关注' }}</van-button>
       </div>
       <div class="markdown-body" v-html="article.content"></div>
+          <comment ref="article-comment"
+          :article-id="articleId" @click-reply="onReplyShow"/>
     </div>
     <!-- 加载失败提示 -->
     <div class="error" v-else>
@@ -39,12 +41,20 @@
       <van-button class="btn" type="default" size="small" @click="getArticle">点击重试</van-button>
     </div>
     <!-- /加载失败提示 -->
-    <comment :articleId="articleId" />
+
     <!-- 底部区域 -->
     <div class="footer">
-      <van-button @click="isPostShow = true" class="write-btn" type="default" round size="small">写评论</van-button>
-      <van-icon class="comment-icon" name="comment-o" info="9" />
-      <van-icon color="orange" :name="article.is_collected ? 'star' : 'star-o'" @click="onCollect" />
+      <van-button
+        class="write-btn"
+        type="default"
+        round
+        size="small"
+        @click="isPostShow = true"
+      >写评论</van-button>
+      <van-icon class="comment-icon" name="comment-o" :info="9" />
+      <van-icon color="orange"
+      :name="article.is_collected ? 'star' : 'star-o'"
+       @click="onCollect" />
       <van-icon
         color="#e5645f"
         :name="article.attitude === 1 ? 'good-job' : 'good-job-o'"
@@ -55,10 +65,17 @@
     <!-- /底部区域 -->
       <van-popup
       v-model="isPostShow"
+      position="bottom">
+      <postcomment
+      v-model="postMessage"
+      @click-post="onPost" />
+    </van-popup>
+    <van-popup
+      v-model="isReplyShow"
       position="bottom"
-
+      style="height: 90%"
     >
-      <postcomment  :articleId='articleId'/>
+      <commentreply :comment="currentComment" />
     </van-popup>
   </div>
 </template>
@@ -75,12 +92,14 @@ import { addFollow, deleteFollow } from '../../api/user'
 import comment from '../article/components/comment'
 import postcomment from '../article/components/post-comment'
 import { mapState } from 'vuex'
-import eventBus from '../../utils/eventBus'
+import { onComment } from '../../api/comments.js'
+import commentreply from '../article/components/comment-reply'
 export default {
   name: 'ArticlePage',
   components: {
     comment,
-    postcomment
+    postcomment,
+    commentreply
   },
   props: {
     // 路由参数会映射到这里
@@ -94,7 +113,10 @@ export default {
       article: {},
       loader: true,
       isFollowLoading: false,
-      isPostShow: false // 发布评论的弹层显示状态
+      isPostShow: false, // 发布评论的弹层显示状态
+      postMessage: '', // 发布评论内容
+      isReplyShow: false, // 展示评论回复弹层
+      currentComment: {} // 点击回复的那个评论项
     }
   },
   computed: {
@@ -104,9 +126,6 @@ export default {
   created () {
     // console.log(this.articleId)
     this.getArticle()
-    eventBus.$on('iscomment', () => {
-      this.isPostShow = false
-    })
   },
   mounted () {},
   methods: {
@@ -117,15 +136,16 @@ export default {
       this.loader = false
     },
     async onCollect () {
+      console.log(this.article.is_collected)
       this.$toast.loading({
         duration: 0, // 持续展示 toast
         message: '操作中...',
         forbidClick: true // 是否禁止背景点击
       })
       try {
+        console.log(this.article)
         // 如果已收藏，则取消收藏
         if (this.article.is_collected) {
-          // console.log(this.article)
           // console.log(this.article.is_collected)
           await deleteCollect(this.articleId)
           this.article.is_collected = false
@@ -183,6 +203,35 @@ export default {
         this.$toast.fail('操作失败')
       }
       this.isFollowLoading = false
+    },
+    async onPost () {
+      this.$toast.loading({
+        duration: 0, // 持续展示 toast
+        message: '发布中...',
+        forbidClick: true // 是否禁止背景点击
+      })
+      try {
+        const { data } = await onComment({
+          target: this.articleId,
+          content: this.postMessage
+        })
+        // 清空文本框
+        this.postMessage = ''
+        // 关闭弹层
+        this.isPostShow = false
+        // 将数据添加到列表顶部
+        this.$refs['article-comment'].list.unshift(data.data.new_obj)
+        this.$toast.success('发布成功')
+      } catch (err) {
+        console.log(err)
+        this.$toast.fail('发布失败')
+      }
+    },
+    onReplyShow (comment) {
+      // 将点击回复所在的评论对象记录起来
+      this.currentComment = comment
+      // 展示回复的弹层
+      this.isReplyShow = true
     }
   }
 }

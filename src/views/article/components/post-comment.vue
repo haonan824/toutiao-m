@@ -2,7 +2,8 @@
   <div class="post-comment">
     <van-field
       class="post-field"
-      v-model="message"
+      :value="value"
+      @input="$emit('input', $event)"
       rows="2"
       autosize
       type="textarea"
@@ -10,19 +11,18 @@
       placeholder="优质评论将会被优先展示"
       show-word-limit
     />
-    <van-button class="post-btn" type="primary" @click="onComments" size="small">发布</van-button>
+    <van-button type="primary"
+    @click="$emit('click-post')" size="small">发布</van-button>
   </div>
 </template>
 
 <script>
-import { onComment } from '../../../api/comments'
-import eventBus from '../../../utils/eventBus'
 export default {
   name: 'PostComment',
   components: {},
   props: {
-    articleId: {
-      type: [Object, Number, String],
+    value: {
+      type: String,
       required: true
     }
   },
@@ -36,19 +36,8 @@ export default {
   created () {},
   mounted () {},
   methods: {
-    async onComments () {
-      try {
-        const res = await onComment({
-          target: this.articleId,
-          content: this.message
-        })
-        eventBus.$emit('iscomment')
-        console.log(res)
-        this.message = ''
-      } catch (err) {
-        console.log(err)
-        this.$toast.fail('评论失败')
-      }
+    onInput (value) {
+      this.$emit('input', value)
     }
   }
 }

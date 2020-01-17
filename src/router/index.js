@@ -12,6 +12,9 @@ const routes = [
     ]
   },
   { path: '/login', component: () => import('../views/login') },
+  {
+    path: '/user/profile', name: 'user-profile', component: () => import('../views/user-profile/index.vue')
+  },
   { path: '/user/:userId', component: () => import('../views/user') },
   { path: '/search', component: () => import('../views/search') },
   { path: '/article/:articleId', component: () => import('../views/article'), props: true }

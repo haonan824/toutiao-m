@@ -14,7 +14,6 @@
 <script>
 import { getComment } from '@/api/comments'
 import CommentItem from './comment-list'
-import eventBus from '../../../utils/eventBus'
 export default {
   name: 'ArticleComment',
   components: {
@@ -35,9 +34,6 @@ export default {
     }
   },
   created () {
-    eventBus.$on('iscomment', () => {
-      this.onLoad()
-    })
   },
 
   methods: {
@@ -53,6 +49,8 @@ export default {
       const { results } = data.data
       this.list.push(...results)
       this.loading = false
+      //   console.log(data.data.total_count)
+      this.$emit('sum', data.data.total_count)
       if (results.length) {
         this.offset = data.data.last_id
       } else {
