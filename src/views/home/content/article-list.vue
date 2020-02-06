@@ -53,19 +53,6 @@ export default {
       this.$toast(`更新了${results.length}条数据`)
     },
     async onLoad () {
-    //   // 异步更新数据
-    //   setTimeout(() => {
-    //     for (let i = 0; i < 10; i++) {
-    //       this.list.push(this.list.length + 1)
-    //     }
-    //     // 加载状态结束
-    //     this.loading = false
-
-      //     // 数据全部加载完成
-      //     if (this.list.length >= 40) {
-      //       this.finished = true
-      //     }
-      //   }, 500)
       // 1.获取数据
       const { data } = await getArticles({
         channel_id: this.channel.id, // 频道id
