@@ -61,7 +61,7 @@ export default {
       } else {
         const { data } = await userchannel()
         // console.log(data)
-        this.userChannels = data.data.channels
+        channels = data.data.channels
       }
       this.userChannels = channels
     }
