@@ -1,12 +1,19 @@
 <template>
   <div id="app">
-    <router-view />
+    <keep-alive :include="$store.state.cachePages">
+      <router-view />
+    </keep-alive>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'app'
+  name: 'app',
+  data () {
+    return {
+      cachePages: ['TabBar']
+    }
+  }
 }
 </script>
 

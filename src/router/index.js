@@ -15,9 +15,20 @@ const routes = [
   {
     path: '/user/profile', name: 'user-profile', component: () => import('../views/user-profile/index.vue')
   },
+  {
+    path: '/user/chat',
+    name: 'user-chat',
+    component: () => import('../views/user-chat')
+  },
   { path: '/user/:userId', component: () => import('../views/user') },
   { path: '/search', component: () => import('../views/search') },
-  { path: '/article/:articleId', component: () => import('../views/article'), props: true }
+  { path: '/article/:articleId', component: () => import('../views/article'), props: true },
+  { // 我的作品
+    path: '/my-article/:type?', // /my-article /my-article/a /my-article/b
+    name: 'my-article',
+    component: () => import('../views/user-articles'),
+    props: true
+  }
 ]
 const router = new VueRouter({
   routes
